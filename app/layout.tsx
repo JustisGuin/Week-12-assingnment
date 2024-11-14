@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import Link from "next/link";
 import "./globals.css";
 
 const geistSans = localFont({
@@ -26,8 +27,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={
+          `${geistSans.variable} ${geistMono.variable} antialiased font-semibold text-text bg-background`
+        }
       >
+        <nav className="flex justify-around p-4 panel underline">
+          <Link href="/videos">View the video list</Link>
+          <Link href="/videos/add">Add a video</Link>
+        </nav>
         {children}
       </body>
     </html>
