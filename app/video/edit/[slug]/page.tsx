@@ -13,7 +13,7 @@ export default function Page({ params }: { params: Promise<{ slug: string }> }) 
       setVideo(await getVideo(videoId))
     }
     queryVideo()
-  }, [])
+  }, [params])
 
   if (video == null) {
     return <div>Fetching video information...</div>
@@ -25,7 +25,7 @@ export default function Page({ params }: { params: Promise<{ slug: string }> }) 
 
   return (
     <div>
-      <h1>Edit "{video.name}"</h1>
+      <h1>Edit {video.name}</h1>
       <form action={updateVideo} className="flex flex-col m-4 justify-items-center">
         <input name="id" type="hidden" value={video.id}></input>
         <label className={labelClass}>

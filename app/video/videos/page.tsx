@@ -7,7 +7,6 @@ import { getVideos, removeVideo, Video } from "@/app/connection"
 
 function VideoList() {
   const [videos, setVideos] = useState<Video[]>([])
-  const [renderedVideos, setRenderedVideos] = useState<Video[]>([])
 
   useEffect(() => {
     async function waitForVideos() {
