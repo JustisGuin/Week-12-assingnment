@@ -1,65 +1,71 @@
-"use client"
-import Link from "next/link"
-import { useEffect, useState } from "react"
+"use client";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
-import { getVideos, removeVideo, Video } from "@/app/connection"
-
+import { getVideos, Video, removeVideo } from "@/app/connection";
 
 function VideoList() {
-  const [videos, setVideos] = useState<Video[]>([])
+  const [videos, setVideos] = useState<Video[]>([]);
+  const [loading, setLoading] = useState(true); // Add loading state
 
   useEffect(() => {
-    async function waitForVideos() {
-      const videos = await getVideos()
-
-      if (videos) {
-        setVideos(videos)
-      }
+    async function loadVideosFromVercel() {
+      const fetchedVideos = await getVideos(); // Fetch videos from your API or source
+      // Check if fetchedVideos is an array and map it to include isVisible
+      const videosWithVisibility = (fetchedVideos || []).map(video => ({
+        ...video,
+        isVisible: true // Set isVisible to true for all fetched videos
+      }));
+      setVideos(videosWithVisibility); // Set the state with the updated videos
+      setLoading(false); // Set loading to false after fetching
     }
-    waitForVideos()
-  },
-  []
-  )
+    loadVideosFromVercel();
 
-  function hideVideo(id: number) {
-    setVideos(videos.filter((video) => video.id != id))
-  }
+  }, []);
 
-  if (!videos) {
+  if (loading) {
     return (
       <div>
-        <p>
-          Videos loading, please wait...
-        </p>
+        <p>Loading videos...</p> {/* Show loading message */}
       </div>
-    )
+    );
   }
 
-  const videoEditUrl = "/videos/edit/"
+  const videoEditUrl = "/videos/edit/";
+  
+  function hideVideo(id: number) {
+    setVideos(videos.map(video => 
+      video.id === id ? { ...video, isVisible: false } : video
+    ));
+  }
 
   return (
     <div className="mx-4">
       <ul>
-        {videos.map((video: Video) => (
-          <li key={video.id} className="mx-2 flex border-b border-secondary">
-            <Link href={videoEditUrl + video.id} className="flex-grow">
-              {video.name}
-            </Link>
-            <button onClick={
-              async () => {
-                hideVideo(video.id)
-                await removeVideo(video.id)
-              }
-            }>
-              Remove
-            </button>
+        {videos.filter(video => video.isVisible).map((video: Video) => (
+          <li key={video.id} className="max-w-md text-gray-900 divide-y divide-gray-200 dark:text-white dark:divide-gray-700 mb-4">
+            <div className="flex justify-between items-center">
+              <div className="relative group">
+                <Link 
+                  href={videoEditUrl + video.id}  
+                  className="flex-grow pb-3 transition duration-200 ease-in-out hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md p-2"
+                >
+                  {video.name}
+                </Link>
+                <span className="absolute left-1/2 transform -translate-x-1/2 mt-8 w-auto px-2 py-1 text-sm text-white bg-gray-800 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                  Click to edit
+                </span>
+              </div>
+              <button onClick={() => hideVideo(video.id)} className="text-red-500 hover:text-red-700">
+                Remove Video
+              </button>
+            </div>
           </li>
         ))}
       </ul>
     </div>
-  )
+  );
 }
-
 
 export default function Home() {
   return (

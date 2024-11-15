@@ -11,29 +11,52 @@ export interface Video {
   url: string
   votes: number
   length: number
+  isVisible: boolean
+  
 }
 
 
-export async function getVideos() {
-  const videos = await prisma.video.findMany()
-
-  return videos
-}
 
 
-export async function addVideo(formData: FormData) {
-  await prisma.video.create({
+
+export async function updateVideo(formData: FormData) {
+  await prisma.video.update({
+    where: {
+      id: Number(formData.get("id"))
+    },
     data: {
-      name: formData.get("name") as string,
-      url: "/videos/test.mp4",
-      votes: parseInt(formData.get("votes") as string),
-      length: parseInt(formData.get("length") as string),
+      name: String(formData.get("name")),
+      votes: Number(formData.get("votes")),
+      length: Number(formData.get("runtime")),
     }
   })
 
   redirect("/videos")
 }
 
+
+
+
+export async function addVideo(formData: FormData){
+
+  const prisma = new PrismaClient()
+  await prisma.video.create({
+    data: {
+        name: String(formData.get('videoname')),
+        url: '/videos/test.mp4',
+        votes: 0,
+        length: Number(formData.get('runtime') ),
+    }
+
+  })
+  redirect('/videos')
+}
+
+export async function getVideos() {
+  const videos = await prisma.video.findMany()
+
+  return videos
+}
 
 export async function getVideo(id: number) {
   const video = await prisma.video.findFirst({
@@ -42,26 +65,8 @@ export async function getVideo(id: number) {
     }
   })
 
-  //redirect
   return video
 }
-
-
-export async function updateVideo(formData: FormData) {
-  await prisma.video.update({
-    where: {
-      id: parseInt(formData.get("id") as string),
-    },
-    data: {
-      name: formData.get("name") as string,
-      votes: parseInt(formData.get("votes") as string),
-      length: parseInt(formData.get("length") as string),
-    }
-  })
-
-  redirect("/videos")
-}
-
 
 export async function removeVideo(id: number) {
   await prisma.video.delete({
@@ -71,9 +76,3 @@ export async function removeVideo(id: number) {
   })
 }
 
-
-// For debugging purposes
-export async function printForm(formData: FormData) {
-  console.log("Form submitted: ")
-  console.log(formData)
-}

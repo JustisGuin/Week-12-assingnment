@@ -1,44 +1,54 @@
 "use client"
 import { useState, useEffect } from "react"
 
-import { getVideo, updateVideo, Video } from "@/app/connection"
+import { getVideo, Video, updateVideo } from "@/app/connection"
+
 
 
 export default function Page({ params }: { params: Promise<{ slug: string }> }) {
   const [video, setVideo] = useState<Video | null>(null)
 
   useEffect(() => {
-    async function queryVideo() {
+    async function queryVercel() {
       const videoId = parseInt((await params).slug)
-      setVideo(await getVideo(videoId))
+      const fetchedVideo = await getVideo(videoId)
+      if(fetchedVideo){
+        const videosWithVisibility: Video = {
+          ...fetchedVideo,
+          isVisible: true
+        }
+        setVideo(videosWithVisibility)
+      } else {
+        setVideo(null)
+      }
+      
     }
-    queryVideo()
+    queryVercel()
   }, [params])
 
   if (video == null) {
     return <div>Fetching video information...</div>
   }
 
+  
 
-  const inputClass = "block mx-8 px-1 bg-secondary"
-  const labelClass = "block text-center flex flex-col p-4"
 
   return (
     <div>
       <h1>Edit {video.name}</h1>
       <form action={updateVideo} className="flex flex-col m-4 justify-items-center">
         <input name="id" type="hidden" value={video.id}></input>
-        <label className={labelClass}>
+        <label className={"block mb-2 text-sm font-medium text-gray-900 dark:text-white"}>
           Title:
-          <input name="name" defaultValue={video.name} className={inputClass}></input>
+          <input name="name" defaultValue={video.name} className={"bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"}></input>
         </label> 
-        <label className={labelClass}>
+        <label className={"block mb-2 text-sm font-medium text-gray-900 dark:text-white"}>
           Votes:
-          <input name="votes" defaultValue={video.votes} className={inputClass}></input>
+          <input name="votes" defaultValue={video.votes} className={"bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"}></input>
         </label>
-        <label className={labelClass}>
-          Runtime (in seconds):
-          <input name="length" defaultValue={video.length} className={inputClass}></input>
+        <label className={"block mb-2 text-sm font-medium text-gray-900 dark:text-white"}>
+          Length Of Video:
+          <input name="length" defaultValue={video.length} className={"bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"}></input>
         </label>
         <button type="submit" className="bg-secondary p-4 w-48 my-4 mx-auto rounded-lg">
           Save Changes

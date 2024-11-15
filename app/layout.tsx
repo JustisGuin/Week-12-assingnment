@@ -32,8 +32,8 @@ export default function RootLayout({
         }
       >
         <nav className="flex justify-around p-4 panel underline">
-          <Link href="/videos">View the video list</Link>
-          <Link href="/videos/add">Add a video</Link>
+          <Link href="/videos">List Videos</Link>
+          <Link href="/videos/add">Add another Video</Link>
         </nav>
         {children}
       </body>
