@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-import { getVideos, Video, removeVideo } from "@/app/connection";
+import { getVideos, Video } from "@/app/connection";
 
 function VideoList() {
   const [videos, setVideos] = useState<Video[]>([]);
