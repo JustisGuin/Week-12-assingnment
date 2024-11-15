@@ -31,9 +31,9 @@ export default function RootLayout({
           `${geistSans.variable} ${geistMono.variable} antialiased font-semibold text-text bg-background`
         }
       >
-        <nav className="flex justify-around p-4 panel underline">
-          <Link href="/videos">List Videos</Link>
-          <Link href="/videos/add">Add another Video</Link>
+        <nav className="flex justify-around p-4 panel underline bg-teal-400 text-white">
+          <Link className="text-white" href="/videos">List Videos</Link>
+          <Link className="text-white" href="/videos/add">Add another Video</Link>
         </nav>
         {children}
       </body>

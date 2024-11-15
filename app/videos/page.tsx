@@ -20,9 +20,9 @@ function VideoList() {
       setLoading(false); // Set loading to false after fetching
     }
     loadVideosFromVercel();
-
   }, []);
 
+  // Render a loading state to avoid hydration errors
   if (loading) {
     return (
       <div>
@@ -43,8 +43,8 @@ function VideoList() {
     <div className="mx-4">
       <ul>
         {videos.filter(video => video.isVisible).map((video: Video) => (
-          <li key={video.id} className="max-w-md text-gray-900 divide-y divide-gray-200 dark:text-white dark:divide-gray-700 mb-4">
-            <div className="flex justify-between items-center">
+          <li key={video.id} className="max-w-md text-gray-900 divide-y divide-gray-200 dark:text-black dark:divide-gray-700 mb-4 ">
+            <div className="flex justify-between items-center ">
               <div className="relative group">
                 <Link 
                   href={videoEditUrl + video.id}  
@@ -56,7 +56,7 @@ function VideoList() {
                   Click to edit
                 </span>
               </div>
-              <button onClick={() => hideVideo(video.id)} className="text-red-500 hover:text-red-700">
+              <button onClick={() => hideVideo(video.id)} className="text-white-500 hover:text-red-500">
                 Remove Video
               </button>
             </div>
@@ -69,11 +69,11 @@ function VideoList() {
 
 export default function Home() {
   return (
-    <div>
-      <h1 className="text-center font-semibold text-xl my-4">
+    <div className="bg-gradient-to-r from-purple-500 to-pink-500 min-h-screen">
+      <h1 className="text-center font-semibold tracking-tight text-xl my-4">
         Video List
       </h1>
-      <VideoList />
+      <VideoList/>
     </div>
   );
 }
